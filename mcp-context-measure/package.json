@@ -1,0 +1,18 @@
+{
+  "packageManager": "pnpm@9.15.0",
+  "name": "mcp-context-measure",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "mcp-context-measure": "./cli.mjs"
+  },
+  "scripts": {
+    "start": "node cli.mjs",
+    "measure": "node cli.mjs",
+    "test:e2e": "node --test test/**/*.test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.0"
+  }
+}
