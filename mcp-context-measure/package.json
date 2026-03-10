@@ -13,6 +13,7 @@
     "test:e2e": "node --test test/**/*.test.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.27.0"
+    "@modelcontextprotocol/sdk": "^1.27.0",
+    "tiktoken": "^1.0.22"
   }
 }

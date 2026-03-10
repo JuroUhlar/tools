@@ -11,6 +11,17 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { get_encoding } from "tiktoken";
+
+const enc = get_encoding("cl100k_base");
+
+/**
+ * @param {string} text
+ * @returns {number}
+ */
+function countTokens(text) {
+  return enc.encode(text).length;
+}
 
 /**
  * @typedef {Object} McpServerConfig
@@ -98,19 +109,24 @@ function getServerConfig(args) {
     const file = JSON.parse(readFileSync(configPath, "utf-8"));
     const serverConfig = file.mcpServers?.[args.server];
     if (!serverConfig?.url) {
-      throw new Error(`Server "${args.server}" not found or missing url in ${configPath}`);
+      throw new Error(
+        `Server "${args.server}" not found or missing url in ${configPath}`,
+      );
     }
     if (serverConfig.auth && !serverConfig.headers) {
       throw new Error(
         `Server "${args.server}" in ${configPath} uses auth-based MCP configuration. ` +
-          "This script currently supports direct URLs with headers or config entries with static headers."
+          "This script currently supports direct URLs with headers or config entries with static headers.",
       );
     }
     const headers = serverConfig.headers
       ? new Headers(serverConfig.headers)
       : new Headers();
     return {
-      config: { url: serverConfig.url, headers: Object.fromEntries(headers.entries()) },
+      config: {
+        url: serverConfig.url,
+        headers: Object.fromEntries(headers.entries()),
+      },
       serverName: args.server,
     };
   }
@@ -124,7 +140,7 @@ function getServerConfig(args) {
   }
 
   throw new Error(
-    "Provide either (--config <path> --server <name>) or (--url <url> --header <key:value> ...)"
+    "Provide either (--config <path> --server <name>) or (--url <url> --header <key:value> ...)",
   );
 }
 
@@ -137,15 +153,15 @@ function printSummary(raw) {
     [
       `MCP context consumption (${raw.server}):`,
       "",
-      `  Tools:      ${raw.tools.length} tools, ${raw.toolsChars.toLocaleString()} chars, ~${raw.toolsTokens.toLocaleString()} tokens`,
-      `  Prompts:    ${raw.prompts.length} prompts, ${raw.promptsChars.toLocaleString()} chars, ~${raw.promptsTokens.toLocaleString()} tokens`,
-      `  Resources:  ${raw.resources.length} resources, ${raw.resourcesChars.toLocaleString()} chars, ~${raw.resourcesTokens.toLocaleString()} tokens`,
-      `  Total:     ~${totalTokens.toLocaleString()} tokens`,
+      `  Tools:      ${raw.tools.length} tools, ${raw.toolsChars.toLocaleString()} chars, ${raw.toolsTokens.toLocaleString()} tokens`,
+      `  Prompts:    ${raw.prompts.length} prompts, ${raw.promptsChars.toLocaleString()} chars, ${raw.promptsTokens.toLocaleString()} tokens`,
+      `  Resources:  ${raw.resources.length} resources, ${raw.resourcesChars.toLocaleString()} chars, ${raw.resourcesTokens.toLocaleString()} tokens`,
+      `  Total:      ${totalTokens.toLocaleString()} tokens`,
       "",
       `  Tool names: ${raw.tools.map((t) => /** @type {{ name?: string }} */ (t).name ?? "?").join(", ")}`,
       `  Prompt names: ${raw.prompts.map((p) => /** @type {{ name?: string }} */ (p).name ?? "?").join(", ")}`,
       "",
-    ].join("\n")
+    ].join("\n"),
   );
 }
 
@@ -171,7 +187,7 @@ function printHelp() {
       "  mcp-context-measure --url https://mcp.example.com/mcp --header 'Authorization: Bearer x'",
       "  mcp-context-measure --config mcp.json --server fingerprint --raw-output dump.json > summary.txt",
       "",
-    ].join("\n")
+    ].join("\n"),
   );
 }
 
@@ -188,10 +204,11 @@ async function measure(config) {
 
   await client.connect(transport);
 
-  const { tools } = await client.listTools();
+  const { tools: rawTools } = await client.listTools();
+  const tools = rawTools.map(({ icons: _icons, ...tool }) => tool);
   const toolsJson = JSON.stringify(tools, null, 2);
   const toolsChars = toolsJson.length;
-  const toolsTokens = Math.ceil(toolsChars / 4);
+  const toolsTokens = countTokens(toolsJson);
 
   /** @type {unknown[]} */
   let prompts = [];
@@ -203,7 +220,7 @@ async function measure(config) {
   }
   const promptsJson = JSON.stringify(prompts, null, 2);
   const promptsChars = promptsJson.length;
-  const promptsTokens = Math.ceil(promptsChars / 4);
+  const promptsTokens = countTokens(promptsJson);
 
   /** @type {unknown[]} */
   let resources = [];
@@ -215,7 +232,7 @@ async function measure(config) {
   }
   const resourcesJson = JSON.stringify(resources, null, 2);
   const resourcesChars = resourcesJson.length;
-  const resourcesTokens = Math.ceil(resourcesChars / 4);
+  const resourcesTokens = countTokens(resourcesJson);
 
   client.close();
 
@@ -255,7 +272,9 @@ async function main() {
 
     printSummary(raw);
   } catch (err) {
-    process.stderr.write(`Error: ${err instanceof Error ? err.message : String(err)}\n`);
+    process.stderr.write(
+      `Error: ${err instanceof Error ? err.message : String(err)}\n`,
+    );
     process.exit(1);
   }
 }
