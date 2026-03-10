@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Config
-OUT_FILE="${1:-pr_changes}"   # you can pass a different output filename as an arg
+OUT_FILE="${1:-pr_changes.md}"   # you can pass a different output filename as an arg
 
 # Preconditions
 if ! command -v gh >/dev/null 2>&1; then

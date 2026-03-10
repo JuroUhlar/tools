@@ -1,29 +1,33 @@
 /**
  * E2E tests for the mcp-context-measure CLI.
  *
- * Uses the bundled test/e2e/mcp.json fixture (context7 server).
+ * Requires CONTEXT7_API_KEY env var. Tests are skipped when it is absent.
  */
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { writeFileSync, mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const execFileAsync = promisify(execFile);
 
-const MCP_CONFIG = fileURLToPath(new URL("./mcp.json", import.meta.url));
 const CLI = fileURLToPath(new URL("../../cli.mjs", import.meta.url));
+const CONTEXT7_API_KEY = process.env.CONTEXT7_API_KEY;
 
 /**
+ * @param {string} config
  * @param {string} server
  * @returns {Promise<{ stdout: string; stderr: string; exitCode: number }>}
  */
-async function runCli(server) {
+async function runCli(config, server) {
   try {
     const { stdout, stderr } = await execFileAsync(
       process.execPath,
-      [CLI, "--config", MCP_CONFIG, "--server", server],
+      [CLI, "--config", config, "--server", server],
       { timeout: 30_000 },
     );
     return { stdout, stderr, exitCode: 0 };
@@ -37,14 +41,35 @@ async function runCli(server) {
   }
 }
 
-test("context7: measures an HTTP MCP server and prints a summary", async (t) => {
-  const { stdout, stderr, exitCode } = await runCli("context7");
+test(
+  "context7: measures an HTTP MCP server and prints a summary",
+  { skip: !CONTEXT7_API_KEY ? "CONTEXT7_API_KEY env var not set" : false },
+  async (t) => {
+    const tmpDir = mkdtempSync(join(tmpdir(), "mcp-test-"));
+    const tmpConfig = join(tmpDir, "mcp.json");
+    writeFileSync(
+      tmpConfig,
+      JSON.stringify(
+        {
+          mcpServers: {
+            context7: {
+              url: "https://mcp.context7.com/mcp",
+              headers: { CONTEXT7_API_KEY },
+            },
+          },
+        },
+        null,
+        2,
+      ),
+    );
 
-  assert.equal(exitCode, 0, `CLI exited with ${exitCode}. stderr: ${stderr}`);
-  assert.match(stdout, /MCP context consumption \(context7\):/);
-  assert.match(stdout, /Tools:\s+\d+ tools/);
-  assert.match(stdout, /Total:\s+[\d,]+ tokens/);
+    const { stdout, stderr, exitCode } = await runCli(tmpConfig, "context7");
 
-  t.diagnostic(stdout.trim());
-});
+    assert.equal(exitCode, 0, `CLI exited with ${exitCode}. stderr: ${stderr}`);
+    assert.match(stdout, /MCP context consumption \(context7\):/);
+    assert.match(stdout, /Tools:\s+\d+ tools/);
+    assert.match(stdout, /Total:\s+[\d,]+ tokens/);
 
+    t.diagnostic(stdout.trim());
+  },
+);

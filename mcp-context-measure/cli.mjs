@@ -131,7 +131,7 @@ function getServerConfig(args) {
     };
   }
 
-  if (args.url && args.headers.length > 0) {
+  if (args.url) {
     const headers = parseHeaders(args.headers);
     return {
       config: { url: args.url, headers: Object.fromEntries(headers.entries()) },
@@ -140,7 +140,7 @@ function getServerConfig(args) {
   }
 
   throw new Error(
-    "Provide either (--config <path> --server <name>) or (--url <url> --header <key:value> ...)",
+    "Provide either (--config <path> --server <name>) or (--url <url> [--header <key:value> ...])",
   );
 }
 
@@ -172,7 +172,7 @@ function printHelp() {
       "",
       "Usage:",
       "  mcp-context-measure --config <path> --server <name> [options]",
-      "  mcp-context-measure --url <url> --header <key:value> [--header ...] [options]",
+      "  mcp-context-measure --url <url> [--header <key:value> ...] [options]",
       "",
       "Options:",
       "  --config <path>     Path to mcp.json",
@@ -234,7 +234,7 @@ async function measure(config) {
   const resourcesChars = resourcesJson.length;
   const resourcesTokens = countTokens(resourcesJson);
 
-  client.close();
+  await client.close();
 
   return {
     server: config.url,

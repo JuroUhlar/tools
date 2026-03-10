@@ -8,7 +8,6 @@
     "mcp-context-measure": "./cli.mjs"
   },
   "scripts": {
-    "start": "node cli.mjs",
     "measure": "node cli.mjs",
     "test:e2e": "node --test test/**/*.test.mjs"
   },
