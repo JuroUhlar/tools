@@ -17,6 +17,14 @@ node /path/to/skills/code-review/scripts/gen_pr_summary.mjs -o out.md   # writes
 node /path/to/skills/code-review/scripts/gen_pr_summary.mjs --help      # all options
 ```
 
+### [pr-description](./skills/pr-description)
+
+Agent skill for writing concise, scannable GitHub PR descriptions. Orients reviewers with short bullets, discussion points for non-obvious decisions, and known-issue notes — without re-explaining the diff.
+
+### [verify-your-work](./skills/verify-your-work)
+
+Agent skill that runs maximum local verification before handing work back: deterministic checks (build, lint, typecheck, test), manual testing, and a fresh-context self-review from a second model.
+
 ### [mcp-context-measure](./mcp-context-measure)
 
 Node CLI that connects to an MCP (Model Context Protocol) HTTP server and measures how many tokens its tool/prompt/resource definitions consume — useful for understanding AI context overhead.
