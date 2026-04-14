@@ -5,6 +5,7 @@
 // Usage:
 //   node gen_pr_summary.mjs [options]
 //
+// Requires execute permission: chmod +x gen_pr_summary.mjs
 // Can be symlinked into bin like: ln -sf "$PWD/skills/pr-review/scripts/gen_pr_summary.mjs" /usr/local/bin/get-pr-summary
 // Then you can: get-pr-summary [options]
 //
@@ -49,6 +50,7 @@ const { values: opts } = parseArgs({
   options: {
     pr: { type: "string", short: "p" },
     "include-comments": { type: "boolean", short: "c" },
+    "include-lockfile": { type: "boolean", short: "l" },
     out: { type: "string", short: "o" },
     help: { type: "boolean", short: "h" },
   },
@@ -64,6 +66,7 @@ Usage: gen-pr-summary [-p <number|url>] [-c] [-o <file>]
 Options:
   -p, --pr <number|url>   PR number or URL (default: auto-detect from current branch)
   -c, --include-comments  Also include reviews and comments
+  -l, --include-lockfile  Include lockfile changes (package-lock.json, pnpm-lock.yaml, yarn.lock)
   -o, --out <file>        Write output to file instead of stdout
   -h, --help              Show this help
 
@@ -116,7 +119,15 @@ const {
   body,
 } = pr;
 
-const diff = tryRun("gh", ["pr", "diff", ...prArgs]);
+const LOCKFILES = ["package-lock.json", "pnpm-lock.yaml", "yarn.lock"];
+
+let diff = tryRun("gh", ["pr", "diff", ...prArgs]);
+if (diff && !opts["include-lockfile"]) {
+  diff = diff
+    .split(/^(?=diff --git )/m)
+    .filter((section) => !LOCKFILES.some((lf) => section.startsWith(`diff --git a/${lf} b/${lf}`)))
+    .join("");
+}
 
 let reviews = "",
   comments = "";

@@ -8,3 +8,5 @@ dist
 
 .results/
 mcp-context-measure/test/e2e/mcp.json
+
+.vscode/
