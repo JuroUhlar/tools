@@ -20,7 +20,8 @@
 //   git         https://git-scm.com
 //
 import { spawnSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname } from "node:path";
 import { parseArgs } from "node:util";
 
 function run(cmd, args = []) {
@@ -190,6 +191,7 @@ lines.push(
 const output = lines.join("\n") + "\n";
 
 if (opts.out) {
+  mkdirSync(dirname(opts.out), { recursive: true });
   writeFileSync(opts.out, output);
   console.error(`Wrote ${opts.out}`);
 } else {

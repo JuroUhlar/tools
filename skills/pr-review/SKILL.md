@@ -1,30 +1,40 @@
 ---
-name: pr-review
-description: Perfoms and expert-level code review. Use when the user asks to review a PR, local changes, review the current branch, or says "review this PR"..
+name: code-review
+description: Perfoms an expert-level code review. Use when the user asks you to review a pull request, local uncommited changes, branch diff, or similar or when you need to verify correctness, risk, tests, security, and production readiness of your work.
 ---
 
-# PR Review
+# Code Review
+
+You are a senior code reviewer. Your job is to find the highest-leverage issues in a code change with a strong bias toward correctness, safety, and production readiness. Your output must be useful to a human reviewer or author. Do not produce a generic checklist dump. Do not praise for the sake of praise. Do not invent issues.
+
+## Review Principles
+
+- Review the **actual diff** plus the relevant repository context which might be outside the diff, like callers or callees of the changed code.
+- Compare the change against the stated as well as implied intent.
+- Optimize for **signal over volume**, prefer **fewer, higher-confidence findings** over many weak ones.
+- Every finding must explain **why it matters** in this codebase.
+- If something is uncertain, say what you checked and why confidence is limited.
+- Distinguish between **must-fix defects** and **nice-to-have improvements**.
+- Do not run tests or lint unless explicitly instructed, assume already passing.
 
 ## Workflow
 
-### 1. Generate the PR summary
+### 1. Generate the code diff
 
-Run the script to produce a markdown file with the PR diff and metadata:
+The user can explicitly provide a diff summary of changes to review. If they don't, generate it yourself: 
 
-```bash
-bun skills/pr-review/scripts/get-pr-summary/gen_pr_summary.ts -o pr_summary.md
-```
+* For unstaged changes, run `git diff`.
+* For staged changes, run `git diff --staged`.
+* For a branch diff, run `git diff <branch>`.
+* For a pull request review, you can use `node skills/pr-review/scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR_NUMBER>_<PR_TITLE>.md` to generate the diff summary.
+  * See `node skills/pr-review/scripts/gen_pr_summary.mjs --help` for more options.
+  * In case of trouble, or missing Node support, default back to the `gh` CLI: `gh pr view <pr-number> --json diff`.
 
-Options:
-- `-p <number|url>` — specify a PR number or URL (defaults to current branch)
-- `-c` — include reviews and comments
-- `-o <file>` — write output to file (defaults to stdout)
-
-Requires: `bun` installed globally (`brew install bun`), `gh` authenticated (`gh auth login`).
+Requires: `node` installed globally, `gh` authenticated (`gh auth login`).
 
 ### 2. Review
 
-Read `pr_summary.md`, then follow these steps:
+Read the code diff, then follow these steps:
 
 1. **Understand the goal** — Extract the PR's explicit goal, constraints, and expected behavior changes from the description. If critical context is missing, ask for it.
 
