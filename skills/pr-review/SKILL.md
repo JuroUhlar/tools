@@ -14,7 +14,8 @@ Find the highest-leverage issues in a code change. Bias toward correctness, safe
 - Every finding explains **why it matters** in this codebase.
 - Distinguish **must-fix defects** from **nice-to-have improvements**.
 - Flag uncertainty: say what you checked and why confidence is limited.
-- Do not run tests or lint unless explicitly asked; assume CI passes.
+- For PRs, do not run tests or lint unless explicitly asked; assume CI is passing.
+- If you do not find a high-confidence issue, say so explicitly.
 
 ## Workflow
 
@@ -22,8 +23,8 @@ Find the highest-leverage issues in a code change. Bias toward correctness, safe
 
 If the user hasn't provided one:
 
-- `git diff` / `git diff --staged` / `git diff <base>..HEAD`
-- For PRs: `node skills/pr-review/scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR>_<TITLE>.md` (`--help` for options; fall back to `gh pr view <n> --json diff`) if necessary
+- `git diff` / `git diff --staged` / `git diff <base>...HEAD`
+- For PRs: `node skills/pr-review/scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR>_<TITLE>.md` (`--help` for options); if needed, fall back to `gh pr diff <n>` plus `gh pr view <n>` for metadata
 
 ### 2. Establish context
 
@@ -50,9 +51,12 @@ When code changes in one layer, check if companion changes are missing: tests, t
 
 - **Regressions first**: what previously-safe behavior could this break?
 - **Correctness**: prefer fixing the root problem rather than masking the symptom
-- **Push back**: if prior comments or docs seem wrong, explain why with code evidence.
 - **Simplicity**: prefer simpler solutions that are easier to understand and maintain.
 - **Readability**: expect clear and obvious variable names, function names, "why" comments. Flag code you have trouble understanding at first glance.
+- **YAGNI**: call out needless scope or complexity created "for the future", "just in case"
+- **Strictness**: prefer failing fast and early rather than masking the problem, call out missing input validation, lack of type safety, etc.
+- **Push back**: if prior comments or docs seem wrong, explain why with code evidence.
+
 
 ## Severity
 
@@ -65,7 +69,7 @@ Default P1/P2. P0 is rare. Skip pure style nits unless they mask a real problem.
 
 ## Output
 
-1. **Findings** by severity — `P<n>: <title>`, file/line refs, impact, proposed fix direction
+1. **Findings** by severity — `P<n>: <title>`, best-available refs (file, line, symbol), impact, proposed fix direction
 2. **Open questions** — only blockers or ambiguities
 3. **Summary** — one paragraph with verdict: approve / approve with follow-ups / request changes
 
