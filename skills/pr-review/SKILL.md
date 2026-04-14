@@ -1,6 +1,6 @@
 ---
 name: pr-review
-description: Generate a PR summary markdown and perform a senior code review. Use when the user asks to review a PR, review the current branch, or says "review this PR". Generates the diff/metadata summary automatically then reviews it.
+description: Perfoms and expert-level code review. Use when the user asks to review a PR, local changes, review the current branch, or says "review this PR"..
 ---
 
 # PR Review
