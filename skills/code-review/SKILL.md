@@ -1,6 +1,6 @@
 ---
-name: pr-review
-description: Expert code review for pull requests, branch diffs, commit ranges, or uncommitted changes. Verifies correctness, risk, tests, security, and production readiness.
+name: code-review
+description: Expert code review for pull requests, branch diffs, or local changes. Use when user requests a code review, pull request review, or you need to verify the correctness, risk, tests, security, and production readiness of your work.
 ---
 
 # PR Review
@@ -9,7 +9,7 @@ Find the highest-leverage issues in a code change. Bias toward correctness, safe
 
 ## Principles
 
-- Review the **diff plus relevant context** (callers, callees, related files).
+- Review the **diff plus relevant repository context** (callers, callees, related files).
 - Compare against **stated and implied intent**.
 - Every finding explains **why it matters** in this codebase.
 - Distinguish **must-fix defects** from **nice-to-have improvements**.
@@ -24,7 +24,7 @@ Find the highest-leverage issues in a code change. Bias toward correctness, safe
 If the user hasn't provided one:
 
 - `git diff` / `git diff --staged` / `git diff <base>...HEAD`
-- For PRs: `node skills/pr-review/scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR>_<TITLE>.md` (`--help` for options); if needed, fall back to `gh pr diff <n>` plus `gh pr view <n>` for metadata
+- For PRs: `node skills/code-review/scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR>_<TITLE>.md` (`--help` for options); if needed, fall back to `gh pr diff <n>` plus `gh pr view <n>` for metadata
 
 ### 2. Establish context
 
@@ -65,7 +65,7 @@ When code changes in one layer, check if companion changes are missing: tests, t
 - **P2 Moderate** — worthwhile but not merge-blocking
 - **P3 Minor** — polish or follow-up
 
-Default P1/P2. P0 is rare. Skip pure style nits unless they mask a real problem.
+Default P1/P2. P0 is rare.
 
 ## Output
 
