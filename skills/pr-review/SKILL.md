@@ -1,70 +1,72 @@
 ---
-name: code-review
-description: Perfoms an expert-level code review. Use when the user asks you to review a pull request, local uncommited changes, branch diff, or similar or when you need to verify correctness, risk, tests, security, and production readiness of your work.
+name: pr-review
+description: Expert code review for pull requests, branch diffs, commit ranges, or uncommitted changes. Verifies correctness, risk, tests, security, and production readiness.
 ---
 
-# Code Review
+# PR Review
 
-You are a senior code reviewer. Your job is to find the highest-leverage issues in a code change with a strong bias toward correctness, safety, and production readiness. Your output must be useful to a human reviewer or author. Do not produce a generic checklist dump. Do not praise for the sake of praise. Do not invent issues.
+Find the highest-leverage issues in a code change. Bias toward correctness, safety, and production readiness. Signal over volume — fewer high-confidence findings beat many weak ones.
 
-## Review Principles
+## Principles
 
-- Review the **actual diff** plus the relevant repository context which might be outside the diff, like callers or callees of the changed code.
-- Compare the change against the stated as well as implied intent.
-- Optimize for **signal over volume**, prefer **fewer, higher-confidence findings** over many weak ones.
-- Every finding must explain **why it matters** in this codebase.
-- If something is uncertain, say what you checked and why confidence is limited.
-- Distinguish between **must-fix defects** and **nice-to-have improvements**.
-- Do not run tests or lint unless explicitly instructed, assume already passing.
+- Review the **diff plus relevant context** (callers, callees, related files).
+- Compare against **stated and implied intent**.
+- Every finding explains **why it matters** in this codebase.
+- Distinguish **must-fix defects** from **nice-to-have improvements**.
+- Flag uncertainty: say what you checked and why confidence is limited.
+- Do not run tests or lint unless explicitly asked; assume CI passes.
 
 ## Workflow
 
-### 1. Generate the code diff
+### 1. Get the diff
 
-The user can explicitly provide a diff summary of changes to review. If they don't, generate it yourself: 
+If the user hasn't provided one:
 
-* For unstaged changes, run `git diff`.
-* For staged changes, run `git diff --staged`.
-* For a branch diff, run `git diff <branch>`.
-* For a pull request review, you can use `node skills/pr-review/scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR_NUMBER>_<PR_TITLE>.md` to generate the diff summary.
-  * See `node skills/pr-review/scripts/gen_pr_summary.mjs --help` for more options.
-  * In case of trouble, or missing Node support, default back to the `gh` CLI: `gh pr view <pr-number> --json diff`.
+- `git diff` / `git diff --staged` / `git diff <base>..HEAD`
+- For PRs: `node skills/pr-review/scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR>_<TITLE>.md` (`--help` for options; fall back to `gh pr view <n> --json diff`) if necessary
 
-Requires: `node` installed globally, `gh` authenticated (`gh auth login`).
+### 2. Establish context
 
-### 2. Review
+Identify the goal from: user instructions > PR description/issue > spec/plan > commit messages > the diff. Flag disagreements between stated intent and actual implementation.
 
-Read the code diff, then follow these steps:
+### 3. Triage risk
 
-1. **Understand the goal** — Extract the PR's explicit goal, constraints, and expected behavior changes from the description. If critical context is missing, ask for it.
+Before deep review, note high-risk areas touched by the change: auth/permissions, secrets/crypto, payments, input validation, concurrency/locking, DB writes/migrations, caching, public API contracts, perf-critical paths. Higher risk = stricter evidence bar.
 
-2. **Validate goal coverage** — Check whether the diff fully implements the stated goal. Call out missing pieces, partial implementations, or scope drift.
+### 4. Review
 
-3. **Validate correctness** — Inspect related files outside the diff when needed. Look for regressions, broken assumptions, and compatibility issues with existing patterns.
+1. **Goal coverage** — fully implemented? Missing pieces or extra scope that should be a separate PR?
+2. **Correctness** — edge cases, failure paths, silent behavior changes, broken invariants. For risky changes, trace data flow end-to-end (entry > validation > auth > transform > persist > output).
+3. **Security** — unsafe input crossing boundaries, missing auth checks, leaked secrets in logs/errors.
+4. **Data integrity** — partial writes, races, cache coherence, migration reversibility.
+5. **Tests** — changed behavior covered? Mocks hiding real risk? Missing regression tests?
+6. **Design** — clarity, coupling, responsibility separation. Easier or harder to change next time?
 
-4. **Review quality** — Evaluate as a senior engineer: functionality, clarity, structure, composition, encapsulation. Flag brittle abstractions, hidden coupling, and confusing ownership.
+### 5. Check for missing counterparts
 
-## Review priorities
+When code changes in one layer, check if companion changes are missing: tests, types/schemas, docs, validation, metrics, migrations, client/server contracts.
 
-Assess findings in this order:
-- Functional bugs and regressions
-- Security/privacy issues
-- Data integrity and state management risks
-- Error handling and edge cases
-- Maintainability and API clarity
-- Test coverage gaps implied by the change
+## Heuristics
 
-## Rules
+- **Regressions first**: what previously-safe behavior could this break?
+- **Correctness**: prefer fixing the root problem rather than masking the symptom
+- **Push back**: if prior comments or docs seem wrong, explain why with code evidence.
+- **Simplicity**: prefer simpler solutions that are easier to understand and maintain.
+- **Readability**: expect clear and obvious variable names, function names, "why" comments. Flag code you have trouble understanding at first glance.
 
-- Do not run tests or lint unless explicitly instructed
-- Use the entire checked-out branch as context, not just the diff
-- Keep suggestions brief and tied to concrete file/line references
-- Avoid style-only feedback unless it affects correctness or maintainability
+## Severity
 
-## Output format
+- **P0 Blocking** — likely production breakage, data loss, security bug
+- **P1 Important** — realistic bug; fix before merge
+- **P2 Moderate** — worthwhile but not merge-blocking
+- **P3 Minor** — polish or follow-up
 
-1. **Findings** (ordered by severity) — file links with line references, impact, fix direction
-2. **Open questions** — only blockers or ambiguities needed to increase confidence
-3. **Summary** — one short paragraph after findings
+Default P1/P2. P0 is rare. Skip pure style nits unless they mask a real problem.
 
-If no findings, state that explicitly and note residual risks or unverified assumptions.
+## Output
+
+1. **Findings** by severity — `P<n>: <title>`, file/line refs, impact, proposed fix direction
+2. **Open questions** — only blockers or ambiguities
+3. **Summary** — one paragraph with verdict: approve / approve with follow-ups / request changes
+
+No findings? Say so explicitly; note residual risks or unverified assumptions.
