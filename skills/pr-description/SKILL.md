@@ -5,7 +5,7 @@ description: Write concise GitHub PR descriptions in the user's preferred style.
 
 # PR Description
 
-Write brief, scannable PR descriptions. Reviewers read the diff; the description is there to orient them and flag non-obvious decisions — not to re-explain the code.
+Write brief, scannable PR descriptions. Reviewers read the diff; the description is there to orient them and explain the intent and non-obvious decisions — not to re-explain the code.
 
 ## Structure
 
@@ -37,3 +37,14 @@ Body with `inline code` and [links](https://...).
 EOF
 )"
 ```
+
+## Include JIRA reference, if available
+
+If you can include a JIRA ticket number in PR title and link to the ticket in the description, do so.
+
+* The user might have provided the JIRA ticket.
+* If not and you have access to JIRA MCP or CLI, use it to find the ticket number (check in progress tasks assigned to me, find the right one).
+
+## Include Slack reference, if available
+
+* If you know a Slack conversation prompted the PR, include a link to the conversation in the description.

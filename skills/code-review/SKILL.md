@@ -24,7 +24,8 @@ Find the highest-leverage issues in a code change. Bias toward correctness, safe
 If the user hasn't provided one:
 
 - `git diff` / `git diff --staged` / `git diff <base>...HEAD`
-- For PRs: `node skills/code-review/scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR>_<TITLE>.md` (`--help` for options); if needed, fall back to `gh pr diff <n>` plus `gh pr view <n>` for metadata
+- For PRs: `node ./scripts/gen_pr_summary.mjs --out ./.tmp/.pr_summary_<PR>_<TITLE>.md` (`--help` for options); if needed, fall back to `gh pr diff <n>` plus `gh pr view <n>` for metadata.
+- Make sure you have the right diff (base branch might not be `main`/`master`, make sure local branches are up to date).
 
 ### 2. Establish context
 
