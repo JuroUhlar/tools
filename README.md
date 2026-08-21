@@ -35,6 +35,14 @@ pnpm run measure -- --config ~/.cursor/mcp.json --server <name>
 pnpm run measure -- --url https://mcp.example.com/mcp
 ```
 
+### [mac_cleanup](./scripts/mac_cleanup.sh)
+
+Interactive macOS disk cleanup. Asks before each step: Library caches, mediaanalysisd, Slack/Android/Xcode caches, Docker prune, `node_modules` under `~/Documents/Code`, Trash, optional reboot.
+
+```bash
+bash scripts/mac_cleanup.sh
+```
+
 ### [notes](./notes)
 
 Misc research notes (skill loading across AI editors, useful links).
