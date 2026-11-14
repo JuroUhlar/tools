@@ -1,0 +1,11 @@
+[
+  {"cask": "karabiner-elements", "app": "Karabiner-Elements.app"},
+  {"cask": "rectangle", "app": "Rectangle.app"},
+  {"cask": "raycast", "app": "Raycast.app"},
+  {"cask": "alt-tab", "app": "AltTab.app"},
+  {"cask": "shottr", "app": "Shottr.app"},
+  {"cask": "zed", "app": "Zed.app"},
+  {"cask": "cursor", "app": "Cursor.app"},
+  {"cask": "ghostty", "app": "Ghostty.app"},
+  {"cask": "logitech-options", "app": "Logi Options.app"}
+]

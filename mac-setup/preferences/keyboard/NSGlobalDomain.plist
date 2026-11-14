@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AppleKeyboardUIMode</key>
+	<integer>1</integer>
+	<key>InitialKeyRepeat</key>
+	<integer>25</integer>
+	<key>KeyRepeat</key>
+	<integer>2</integer>
+	<key>com.apple.keyboard.fnState</key>
+	<true/>
+</dict>
+</plist>

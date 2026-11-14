@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>KeyboardShortcuts_area</key>
+	<string>{"carbonModifiers":4096,"carbonKeyCode":35}</string>
+	<key>KeyboardShortcuts_fullscreen</key>
+	<string>{"carbonModifiers":6144,"carbonKeyCode":35}</string>
+	<key>KeyboardShortcuts_ocr</key>
+	<string>{"carbonModifiers":6400,"carbonKeyCode":31}</string>
+	<key>KeyboardShortcuts_window</key>
+	<false/>
+	<key>afterGrabCopy</key>
+	<false/>
+	<key>afterGrabSave</key>
+	<false/>
+	<key>afterGrabShow</key>
+	<true/>
+	<key>alwaysOnTop</key>
+	<false/>
+	<key>areaCaptureMode</key>
+	<string>editor</string>
+	<key>captureCursor</key>
+	<string>auto</string>
+	<key>colorFormat</key>
+	<string>HEXno</string>
+	<key>copyOnEsc</key>
+	<true/>
+	<key>downscaleOnSave</key>
+	<false/>
+	<key>notificationType</key>
+	<string>custom</string>
+	<key>ocrRemoveBreaks</key>
+	<false/>
+	<key>primaryOCRLang</key>
+	<string>en-US</string>
+	<key>realPixels</key>
+	<false/>
+	<key>saveFormat</key>
+	<string>Auto</string>
+	<key>saveOnEsc</key>
+	<false/>
+	<key>scrollingManualEnabled</key>
+	<false/>
+	<key>scrollingMax</key>
+	<integer>20000</integer>
+	<key>scrollingReverseAutoscroll</key>
+	<false/>
+	<key>scrollingSpeed</key>
+	<integer>2</integer>
+	<key>thumbnailClosing</key>
+	<string>auto</string>
+	<key>windowShadow</key>
+	<string>wallpaper</string>
+</dict>
+</plist>

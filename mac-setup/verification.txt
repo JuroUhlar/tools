@@ -1,0 +1,6 @@
+PASS preview: no files or isolated preferences changed
+PASS apply: 14 isolated preference domains match captured values; files match; unrelated settings preserved
+PASS repeat apply: same captured preference values
+PASS restore: original files/domains restored; newly created configuration files/domains removed
+PASS captured inputs: U.S.+Slovak QWERTY; en_CZ; active Mac Karabiner profile; excluded editor connections/paths absent
+UNVERIFIED: fresh-Mac installs, app GUI ingestion, hardware, permissions, Raycast export/import, Logi behavior on another Mac

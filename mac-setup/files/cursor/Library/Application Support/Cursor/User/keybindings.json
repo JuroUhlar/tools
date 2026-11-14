@@ -1,0 +1,43 @@
+[
+  {
+    "key": "cmd+h",
+    "command": "-editor.action.simpleInlineDiffs.rejectAll",
+    "when": "editorTextFocus && hasDisplayedSimpleDiff"
+  },
+  {
+    "key": "cmd+l",
+    "command": "expandLineSelection",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "cmd+p",
+    "command": "-expandLineSelection",
+    "when": "textInputFocus"
+  },
+  {
+    "key": "cmd+n",
+    "command": "-workbench.action.files.newUntitledFile"
+  },
+  {
+    "key": "ctrl+left",
+    "command": "workbench.action.navigateBack"
+  },
+  {
+    "key": "ctrl+right",
+    "command": "workbench.action.navigateForward"
+  },
+  {
+    "key": "cmd+space",
+    "command": "editor.action.triggerSuggest",
+    "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+  },
+  {
+    "key": "alt+escape",
+    "command": "-editor.action.triggerSuggest",
+    "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+  },
+  {
+    "key": "cmd+i",
+    "command": "aichat.newchataction"
+  }
+]

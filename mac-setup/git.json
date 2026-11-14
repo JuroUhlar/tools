@@ -1,0 +1,8 @@
+{
+  "user.name": "Juraj Uhlar",
+  "user.email": "juro.uhlar@gmail.com",
+  "push.autoSetupRemote": "true",
+  "core.mergeoptions": "--no-edit",
+  "init.defaultbranch": "main",
+  "core.editor": "cursor --wait"
+}

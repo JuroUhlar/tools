@@ -43,6 +43,15 @@ Interactive macOS disk cleanup. Asks before each step: Library caches, mediaanal
 bash scripts/mac_cleanup.sh
 ```
 
+### [mac-setup](./mac-setup)
+
+Portable macOS setup with selected system preferences, app installation, Karabiner mappings, editor settings, Oh My Zsh, and Git. Includes a read-only preview, backups, restore, and configuration capture. Raycast import/export and macOS permissions have documented manual steps.
+
+```bash
+cd mac-setup
+bash setup.sh preview
+```
+
 ### [notes](./notes)
 
 Misc research notes (skill loading across AI editors, useful links).

@@ -1,0 +1,73 @@
+{
+  "project_panel": {
+    "dock": "left"
+  },
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "icon_theme": {
+    "mode": "light",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
+  "agent_ui_font_size": 15.0,
+  "agent_servers": {
+    "codex-acp": {
+      "type": "registry"
+    },
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
+  "prettier": {
+    "allowed": true
+  },
+  "git_panel": {
+    "dock": "right",
+    "tree_view": false
+  },
+  "agent": {
+    "sidebar_side": "right",
+    "dock": "right",
+    "tool_permissions": {
+      "tools": {
+        "terminal": {
+          "default": "allow"
+        }
+      }
+    },
+    "default_model": {
+      "enable_thinking": true,
+      "provider": "google",
+      "model": "gemini-2.5-pro"
+    },
+    "model_parameters": []
+  },
+  "base_keymap": "Cursor",
+  "ui_font_size": 14.0,
+  "buffer_font_size": 14.0,
+  "theme": {
+    "mode": "light",
+    "light": "Zedokai Light (Filter Sun)",
+    "dark": "Discord Dark"
+  },
+  "auto_install_extensions": {
+    "0x96f": true,
+    "aira": true,
+    "blade-runner-2049": true,
+    "cspell": true,
+    "dark-discord": true,
+    "html": true,
+    "martianized": true,
+    "monokai-og": true,
+    "severance-theme": true,
+    "synthwave-alpha-theme": true,
+    "vercel-theme": true,
+    "vscode-dark-polished": true,
+    "warm-light": true,
+    "zedokai": true
+  }
+}
